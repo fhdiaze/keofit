@@ -7,14 +7,13 @@ import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) throws FileNotFoundException {
         Main s = new Main();
         s.execute();
     }
 
     private void execute() throws FileNotFoundException {
-        File file = new File("D:/Work/Keo/Code/Fit/src/main/res/input.txt");
+        File file = new File(getClass().getResource("input.txt").getFile());
         Scanner scanner = new Scanner(file);
 
         int cases = Integer.parseInt(scanner.nextLine());

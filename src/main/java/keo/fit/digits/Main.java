@@ -12,7 +12,7 @@ public class Main {
     }
 
     private void execute() throws FileNotFoundException {
-        File file = new File("D:/Work/Keo/Code/Fit/src/main/java/keo/fit/digits/input.txt");
+        File file = new File(getClass().getResource("input.txt").getFile());
         Scanner scanner = new Scanner(file);
 
         String line = scanner.nextLine();
@@ -56,6 +56,9 @@ public class Main {
                 } else {
                     min = builder.reverse().toString();
                 }
+            } else if(targetSum == 0 && length == 1) {
+                max = "0";
+                min = "0";
             } else {
                 max = "-1";
                 min = "-1";
