@@ -2,8 +2,8 @@ package keo.fit.market;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -13,8 +13,8 @@ public class Main {
     }
 
     private void execute() throws FileNotFoundException {
-        File file = new File(getClass().getResource("input.txt").getFile());
-        Scanner scanner = new Scanner(file);
+        //File file = new File(getClass().getResource("input.txt").getFile());
+        Scanner scanner = new Scanner(System.in);
 
         int cases = Integer.parseInt(scanner.nextLine());
 
@@ -65,10 +65,12 @@ public class Main {
     private class Problem {
         private Item[] objects;
         private int[] capacities;
+        private Map<String, Integer> loads;
 
         public Problem(Item[] objects, int[] capacities) {
             this.objects = objects;
             this.capacities = capacities;
+            this.loads = new HashMap<>();
         }
 
         public int solve() {
@@ -82,11 +84,17 @@ public class Main {
         }
 
         public int loadPerson(Item[] objects, int capacity, int start) {
-            if (start == objects.length || capacity==0) {
+            if (start == objects.length || capacity == 0) {
                 return 0;
             }
-            
-            int value = 0;
+
+            String key = String.format("%d,%d", start, capacity);
+
+            int value = this.loads.getOrDefault(key, -1);
+
+            if (value != -1) {
+                return value;
+            }
 
             int price = objects[start].getPrice();
             int weight = objects[start].getWeight();
@@ -94,10 +102,14 @@ public class Main {
             int notTookValue = loadPerson(objects, capacity, start + 1);
 
             if (weight <= capacity) {
-                tookValue = price + loadPerson(objects, capacity-weight, start + 1);
+                tookValue = price + loadPerson(objects, capacity - weight, start + 1);
             }
             
-            return Math.max(tookValue, notTookValue);
+            value = Math.max(tookValue, notTookValue);
+
+            this.loads.put(key, value);
+            
+            return value;
         }
     }
 }
