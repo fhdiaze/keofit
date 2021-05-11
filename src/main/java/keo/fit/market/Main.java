@@ -60,10 +60,6 @@ public class Main {
         public int getWeight() {
             return this.weight;
         }
-
-        public double getRate() {
-            return price * 1.0 / weight;
-        }
     }
 
     private class Problem {
@@ -71,7 +67,6 @@ public class Main {
         private int[] capacities;
 
         public Problem(Item[] objects, int[] capacities) {
-            Arrays.sort(objects, Comparator.comparing(Item::getRate).reversed());
             this.objects = objects;
             this.capacities = capacities;
         }
@@ -80,23 +75,29 @@ public class Main {
             int totalWeight = 0;
 
             for (int c : capacities) {
-                totalWeight += this.loadPerson(objects, c);
+                totalWeight += this.loadPerson(objects, c, 0);
             }
 
             return totalWeight;
         }
 
-        public int loadPerson(Item[] objects, int capacity) {
+        public int loadPerson(Item[] objects, int capacity, int start) {
+            if (start == objects.length || capacity==0) {
+                return 0;
+            }
+            
             int value = 0;
 
-            for (Item o : objects) {
-                if (o.getWeight() <= capacity) {
-                    value += o.getPrice();
-                    capacity -= o.getWeight();
-                }
-            }
+            int price = objects[start].getPrice();
+            int weight = objects[start].getWeight();
+            int tookValue = 0;
+            int notTookValue = loadPerson(objects, capacity, start + 1);
 
-            return value;
+            if (weight <= capacity) {
+                tookValue = price + loadPerson(objects, capacity-weight, start + 1);
+            }
+            
+            return Math.max(tookValue, notTookValue);
         }
     }
 }
